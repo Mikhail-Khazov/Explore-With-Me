@@ -1,4 +1,4 @@
-FROM amazoncorretto:11
-COPY target/*.jar statistics-explore-with-me.jar
-ENTRYPOINT ["java", "-jar", "/statistics-explore-with-me.jar"]
+FROM amazoncorretto:11-alpine-jdk
+COPY target/*.jar stats-server.jar
+ENTRYPOINT ["java", "-jar", "/stats-server.jar"]
 EXPOSE 9090
