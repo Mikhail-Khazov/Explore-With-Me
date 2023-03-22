@@ -9,7 +9,7 @@ public class StatsResponseMapper {
     public StatsResponseDto toDto(StatsResponse stats) {
         return StatsResponseDto.builder()
                 .uri(stats.getUri())
-                .service(stats.getService())
+                .app(stats.getApp())
                 .hits(stats.getHits())
                 .build();
     }

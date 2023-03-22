@@ -12,7 +12,7 @@ import javax.persistence.Id;
 @Builder
 @Entity
 public class StatsResponse {
-    private String service;
+    private String app;
     @Id
     private String uri;
     private Long hits;

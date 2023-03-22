@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @Builder
 public class StatsResponseDto {
-    private String service;
+    private String app;
     private String uri;
     private Long hits;
 }
