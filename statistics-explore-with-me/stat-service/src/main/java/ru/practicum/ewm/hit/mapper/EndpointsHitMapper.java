@@ -6,12 +6,12 @@ import ru.practicum.ewm.hit.model.EndpointsHit;
 
 @Component
 public class EndpointsHitMapper {
-    public EndpointsHit toEntity(EndpointsHitDto hit, String ip) {
+    public EndpointsHit toEntity(EndpointsHitDto hit) {
         return EndpointsHit.builder()
                 .id(null)
                 .app(hit.getApp())
                 .uri(hit.getUri())
-                .ip(ip)
+                .ip(hit.getIp())
                 .created(hit.getTimestamp())
                 .build();
     }

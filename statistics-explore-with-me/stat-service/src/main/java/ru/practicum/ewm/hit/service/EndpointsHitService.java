@@ -1,8 +1,6 @@
 package ru.practicum.ewm.hit.service;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.EndpointsHitDto;
@@ -17,8 +15,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
-@Setter
 @RequiredArgsConstructor
 @Service
 public class EndpointsHitService {
@@ -27,14 +23,15 @@ public class EndpointsHitService {
     private final StatsResponseMapper responseMapper;
 
     @Transactional
-    public EndpointsHitDto save(EndpointsHitDto hit, String ip) {
-        return mapper.toDto(storage.save(mapper.toEntity(hit, ip)));
+    public EndpointsHitDto save(EndpointsHitDto hit) {
+        return mapper.toDto(storage.save(mapper.toEntity(hit)));
     }
 
     @Transactional(readOnly = true)
     public List<StatsResponseDto> getStats(LocalDateTime start, LocalDateTime end, Collection<String> uris, Boolean unique) {
         List<StatsResponse> stats;
-        stats = unique ? storage.getUniqIpStats(start, end, uris) : storage.getAllStats(start, end, uris);
+        if (uris.isEmpty()) stats = unique ? storage.getUniqIpStats(start, end) : storage.getAllStats(start, end);
+        else stats = unique ? storage.getUniqIpStats(start, end, uris) : storage.getAllStats(start, end, uris);
         return stats.stream().map(responseMapper::toDto).collect(Collectors.toList());
     }
 }

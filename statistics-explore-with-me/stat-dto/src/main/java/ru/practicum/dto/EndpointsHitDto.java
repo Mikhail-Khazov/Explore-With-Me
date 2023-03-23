@@ -19,7 +19,6 @@ public class EndpointsHitDto {
     @NotBlank(message = "field uri can not be blank")
     private String uri;
     private String ip;
-//    @Future(message = "the event must be start in the future")
     @NotNull(message = "field timestamp can not be blank")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;

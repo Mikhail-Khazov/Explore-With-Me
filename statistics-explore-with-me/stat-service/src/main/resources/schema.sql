@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS requests
     ip VARCHAR(120) NOT NULL,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     CONSTRAINT pk_request PRIMARY KEY (id)
-);
+    );
