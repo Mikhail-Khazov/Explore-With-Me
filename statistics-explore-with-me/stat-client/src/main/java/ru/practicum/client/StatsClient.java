@@ -18,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class StatsClient {
     private final RestTemplate restTemplate;
-    @Value("{$stats-service.url}")
+    @Value("${stats-service.url}")
     private String url;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

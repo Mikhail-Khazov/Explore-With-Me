@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class EndpointsHitDto {
-    private Long id;
+    //TODO id?
     @NotBlank(message = "field app can not be blank")
     private String app;
     @NotBlank(message = "field uri can not be blank")

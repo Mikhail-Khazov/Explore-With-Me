@@ -18,7 +18,6 @@ public class EndpointsHitMapper {
 
     public EndpointsHitDto toDto(EndpointsHit hit) {
         return EndpointsHitDto.builder()
-                .id(hit.getId())
                 .app(hit.getApp())
                 .uri(hit.getUri())
                 .ip(hit.getIp())
