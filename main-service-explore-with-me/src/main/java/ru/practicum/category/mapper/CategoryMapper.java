@@ -7,7 +7,7 @@ import ru.practicum.category.model.Category;
 
 @Component
 public class CategoryMapper {
-    public CategoryDto toDto(Category category){
+    public CategoryDto toDto(Category category) {
         return new CategoryDto(category.getId(), category.getName());
     }
 

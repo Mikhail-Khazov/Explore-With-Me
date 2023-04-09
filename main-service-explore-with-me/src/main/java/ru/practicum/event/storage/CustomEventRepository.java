@@ -1,26 +1,18 @@
 package ru.practicum.event.storage;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 import ru.practicum.category.service.AdminCategoryService;
 import ru.practicum.common.exception.LocationNotFoundException;
 import ru.practicum.event.dto.UpdateEventDto;
-import ru.practicum.event.model.Location;
-import ru.practicum.user.model.User;
-import ru.practicum.user.service.AdminUserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Component;
 import ru.practicum.event.model.EnterParams;
 import ru.practicum.event.model.Event;
+import ru.practicum.event.model.Location;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.springframework.data.jpa.domain.Specification.*;
 
 @Component
 @RequiredArgsConstructor
@@ -32,7 +24,7 @@ public class CustomEventRepository {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (params.getUsers() != null && !params.getUsers().isEmpty()) {
-                predicates.add(root.get("initiator_id").in(params.getUsers()));
+                predicates.add(root.get("initiator").in(params.getUsers()));
             }
             if (params.getStates() != null && !params.getStates().isEmpty()) {
                 predicates.add(root.get("state").in(params.getStates()));
@@ -49,15 +41,19 @@ public class CustomEventRepository {
             if (params.getOnlyAvailable() != null) {
                 predicates.add(cb.lessThan(cb.size(root.get("confirmedRequests")), root.get("participantLimit")));
             }
-            if (params.getPaid()!= null) {
+            if (params.getPaid() != null) {
                 predicates.add(root.get("paid").in(params.getPaid()));
-            }
-            if (params.getText() != null && !params.getText().isBlank()) {
-                predicates.add(cb.like(cb.lower(root.get("annotation")), "%" + params.getText().toLowerCase() + "%"));
-                predicates.add(cb.like(cb.lower(root.get("description")), "%" + params.getText().toLowerCase() + "%"));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    public Specification<Event> createSpecificationAnnotation(EnterParams params) {
+        return (root, query, cb) -> cb.like(cb.lower(root.get("annotation")), "%" + params.getText().toLowerCase() + "%");
+    }
+
+    public Specification<Event> createSpecificationDescription(EnterParams params) {
+        return (root, query, cb) -> cb.like(cb.lower(root.get("description")), "%" + params.getText().toLowerCase() + "%");
     }
 
     public void updateEventFields(Event event, UpdateEventDto dto) {
@@ -67,7 +63,7 @@ public class CustomEventRepository {
         if (null != dto.getEventDate()) event.setEventDate(dto.getEventDate());
         if (null != dto.getLocation()) {
             Location location = locationStorage.findById(event.getLocation().getId()).orElseThrow(LocationNotFoundException::new);
-            if (null != dto.getLocation().getLat() && null != dto.getLocation().getLon()){
+            if (null != dto.getLocation().getLat() && null != dto.getLocation().getLon()) {
                 location.setLat(dto.getLocation().getLat());
                 location.setLon(dto.getLocation().getLon());
             }

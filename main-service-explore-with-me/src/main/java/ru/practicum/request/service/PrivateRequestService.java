@@ -39,7 +39,7 @@ public class PrivateRequestService {
         if (existingRequest.isPresent()) throw new RequestException("Request already exist");
         if (event.getInitiator().getId().equals(userId)) throw new RequestException("Request to own event");
         if (!event.getState().equals(EventState.PUBLISHED)) throw new RequestException("Event not published");
-        if (event.getParticipantLimit() == event.getConfirmedRequests().size())
+        if (event.getParticipantLimit() <= event.getConfirmedRequests().size() && event.getParticipantLimit() != 0)
             throw new RequestException("Participants limit reached");
 
         Request request = Request.builder()
@@ -48,8 +48,9 @@ public class PrivateRequestService {
                 .user(user)
                 .build();
 
-        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) request.setStatus(RequestStatus.CONFIRMED);
-        else  request.setStatus(RequestStatus.PENDING);
+        if (!event.getRequestModeration() || event.getParticipantLimit() == 0)
+            request.setStatus(RequestStatus.CONFIRMED);
+        else request.setStatus(RequestStatus.PENDING);
 
         return mapper.toDto(storage.save(request));
     }

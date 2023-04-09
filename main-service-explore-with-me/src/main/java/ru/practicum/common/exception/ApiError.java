@@ -7,9 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ApiError {
-//    private List<Throwable> errors; TODO
     private String status;
-    private String reason;
     @JsonProperty("message")
     private String message;
     private String timestamp;

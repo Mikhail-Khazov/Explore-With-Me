@@ -8,7 +8,6 @@ import lombok.Setter;
 import ru.practicum.common.enums.EventStateAction;
 import ru.practicum.event.model.Location;
 
-import javax.validation.constraints.Future;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -25,7 +24,6 @@ public class UpdateEventDto {
     @Size(max = DESCRIPTION_MAX_LENGTH, min = DESCRIPTION_MIN_LENGTH, message = "Not less than 20 and not more than 7000")
     private String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DT_PATTERN)
-    @Future
     private LocalDateTime eventDate;
     private Location location;
     private Boolean paid;

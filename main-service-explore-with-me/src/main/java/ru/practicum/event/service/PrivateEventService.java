@@ -97,11 +97,12 @@ public class PrivateEventService {
     public EventRequestStatusUpdateResult updateRequestsStatus(Long userId,
                                                                Long eventId,
                                                                EventRequestStatusUpdateRequest updateStatus) {
+        if (updateStatus == null) throw new RequestException("updateStatus is null");
         Event event = getByEventAndUserIds(eventId, userId);
         if (!event.getRequestModeration() || event.getParticipantLimit() == 0 ||
                 updateStatus.getRequestIds().isEmpty())
             return new EventRequestStatusUpdateResult(Collections.emptyList(), Collections.emptyList());
-        if (event.getParticipantLimit() == event.getConfirmedRequests().size())
+        if (event.getParticipantLimit() <= event.getConfirmedRequests().size() && event.getParticipantLimit() != 0)
             throw new RequestException("Participants limit reached");
 
         List<Request> requests = requestStorage.findAllByIdIn(updateStatus.getRequestIds());

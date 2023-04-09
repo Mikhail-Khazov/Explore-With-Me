@@ -15,4 +15,6 @@ public interface EventStorage extends JpaRepository<Event, Long>, JpaSpecificati
     List<Event> findByInitiatorId(Long userId, PageRequest pageRequest);
 
     Optional<Event> findByIdAndInitiatorId(Long eventId, Long userId);
+
+    Boolean existsByCategoryId(Long catId);
 }

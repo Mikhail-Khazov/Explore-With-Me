@@ -32,7 +32,7 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-    @OneToMany(mappedBy = "event")  //TODO
+    @OneToMany(mappedBy = "event")
     @JsonManagedReference
     private List<Request> confirmedRequests;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DT_PATTERN)

@@ -9,7 +9,4 @@ public class RequestException extends RuntimeException {
         super(message);
     }
 
-    public RequestException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

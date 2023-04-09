@@ -8,7 +8,7 @@ import ru.practicum.user.model.User;
 
 @Component
 public class RequestMapper {
-    public Request toModel(ParticipationRequestDto dto, Event event, User requester){
+    public Request toModel(ParticipationRequestDto dto, Event event, User requester) {
         return Request.builder()
                 .id(dto.getId())
                 .created(dto.getCreated())
@@ -18,7 +18,7 @@ public class RequestMapper {
                 .build();
     }
 
-    public ParticipationRequestDto toDto(Request model){
+    public ParticipationRequestDto toDto(Request model) {
         return ParticipationRequestDto.builder()
                 .id(model.getId())
                 .created(model.getCreated())

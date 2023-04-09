@@ -5,7 +5,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.category.service.AdminCategoryService;
 import ru.practicum.common.enums.EventState;
 import ru.practicum.common.exception.EventNotFoundException;
 import ru.practicum.common.exception.EventUpdateException;
@@ -16,7 +15,6 @@ import ru.practicum.event.model.EnterParams;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.storage.CustomEventRepository;
 import ru.practicum.event.storage.EventStorage;
-import ru.practicum.event.storage.LocationStorage;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,9 +27,7 @@ import java.util.stream.Collectors;
 public class AdminEventService {
     private final EventStorage storage;
     private final EventMapper mapper;
-    private final AdminCategoryService categoryService;
     private final CustomEventRepository customRepository;
-    private final LocationStorage locationStorage;
 
     public List<Event> getAllForCompilation(List<Long> events) {
         return storage.findAllById(events);
@@ -62,15 +58,5 @@ public class AdminEventService {
     public List<EventFullDto> getByParams(EnterParams params, PageRequest pageRequest) {
         Specification<Event> spec = customRepository.createSpecification(params);
         return storage.findAll(spec, pageRequest).stream().map(mapper::toFullDto).collect(Collectors.toList());
-//        storage.findAll(getAllByParams(params), pageRequest);
-//        List<Event> events = storage.findAll(Specification.where(Event))
-//        return storage.get(params);
     }
-
-//TODO
-
-//    private Specification<Event> getAllByParams(EnterParams params) {
-//        EntityManager entityManager = getEntityManager();
-//        CriteriaBuilder criteriaBuilder =
-//        }
 }

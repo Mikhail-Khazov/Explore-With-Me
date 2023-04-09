@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.common.enums.EventSort;
 import ru.practicum.common.enums.EventState;
 import ru.practicum.event.dto.EventFullDto;
+import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.model.EnterParams;
 import ru.practicum.event.service.PublicEventService;
 
@@ -31,16 +32,15 @@ public class PublicEventController {
     }
 
     @GetMapping
-    public List<EventFullDto> getByParams(@RequestParam(required = false) String text,
-                                          @RequestParam(required = false) List<Long> categories,
-                                          @RequestParam(required = false) Boolean paid,
-                                          @RequestParam(required = false) @DateTimeFormat(pattern = DT_PATTERN) LocalDateTime rangeStart,
-                                          @RequestParam(required = false) @DateTimeFormat(pattern = DT_PATTERN) LocalDateTime rangeEnd,
-                                          @RequestParam(defaultValue = "false") Boolean onlyAvailable,
-                                          @RequestParam(required = false) String sort,
-                                          @RequestParam(defaultValue = DEFAULT_FROM_VALUE) @Min(0) int from,
-                                          @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @Min(1) @Max(30) int size,
-                                          HttpServletRequest request){
+    public List<EventShortDto> getByParams(@RequestParam(required = false) String text,
+                                           @RequestParam(required = false) List<Long> categories,
+                                           @RequestParam(required = false) Boolean paid,
+                                           @RequestParam(required = false) @DateTimeFormat(pattern = DT_PATTERN) LocalDateTime rangeStart,
+                                           @RequestParam(required = false) @DateTimeFormat(pattern = DT_PATTERN) LocalDateTime rangeEnd,
+                                           @RequestParam(defaultValue = "false") Boolean onlyAvailable,
+                                           @RequestParam(required = false) String sort,
+                                           @RequestParam(defaultValue = DEFAULT_FROM_VALUE) @Min(0) int from,
+                                           @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @Min(1) @Max(30) int size) {
 
         EnterParams params = EnterParams.builder()
                 .text(text)
@@ -53,6 +53,6 @@ public class PublicEventController {
                 .build();
         Sort sorting = EventSort.from(sort);
 
-        return service.getByParam(params, PageRequest.of(from / size, size, sorting), request);
+        return service.getByParam(params, PageRequest.of(from / size, size, sorting));
     }
 }

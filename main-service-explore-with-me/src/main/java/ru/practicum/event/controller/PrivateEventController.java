@@ -1,11 +1,11 @@
 package ru.practicum.event.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.common.enums.EventStateAction;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.service.PrivateEventService;
 import ru.practicum.request.dto.ParticipationRequestDto;
@@ -20,6 +20,7 @@ import static ru.practicum.common.Utils.DEFAULT_SIZE_VALUE;
 @RestController
 @RequestMapping(path = "/users/{userId}/events")
 @RequiredArgsConstructor
+@Slf4j
 public class PrivateEventController {
     private final PrivateEventService service;
 
@@ -54,7 +55,7 @@ public class PrivateEventController {
     @PatchMapping(path = "/{eventId}/requests")
     public EventRequestStatusUpdateResult updateRequestsStatus(@PathVariable Long userId,
                                                                @PathVariable Long eventId,
-                                                               @Validated @RequestBody EventRequestStatusUpdateRequest updateStatus) {
+                                                               @Validated @RequestBody(required = false) EventRequestStatusUpdateRequest updateStatus) {
         return service.updateRequestsStatus(userId, eventId, updateStatus);
     }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.common.exception.UserConflictException;
 import ru.practicum.common.exception.UserNotFoundException;
 import ru.practicum.user.dto.NewUserDto;
 import ru.practicum.user.dto.UserDto;
@@ -22,6 +23,7 @@ public class AdminUserService {
     private final UserStorage storage;
 
     public UserDto create(NewUserDto newUserDto) {
+        if (storage.findByName(newUserDto.getName()).isPresent()) throw new UserConflictException("Name already taken");
         User user = mapper.toModel(newUserDto);
         return mapper.toDto(storage.save(user));
     }

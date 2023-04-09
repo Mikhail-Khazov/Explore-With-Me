@@ -31,7 +31,7 @@ public class AdminEventController {
                                           @RequestParam(required = false) @DateTimeFormat(pattern = DT_PATTERN) LocalDateTime rangeStart,
                                           @RequestParam(required = false) @DateTimeFormat(pattern = DT_PATTERN) LocalDateTime rangeEnd,
                                           @RequestParam(defaultValue = DEFAULT_FROM_VALUE) @Min(0) int from,
-                                          @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @Min(1) @Max(30) int size){
+                                          @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @Min(1) @Max(30) int size) {
         EnterParams params = EnterParams.builder()
                 .users(users)
                 .states(states)
@@ -44,7 +44,7 @@ public class AdminEventController {
 
 
     @PatchMapping(path = "/{eventId}")
-    public EventFullDto update(@PathVariable long eventId, @Validated @RequestBody UpdateEventDto updateDto){
+    public EventFullDto update(@PathVariable long eventId, @Validated @RequestBody UpdateEventDto updateDto) {
         return service.update(eventId, updateDto);
     }
 

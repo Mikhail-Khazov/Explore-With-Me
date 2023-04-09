@@ -9,7 +9,4 @@ public class RequestNotFoundException extends RuntimeException {
         super(message);
     }
 
-    public RequestNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

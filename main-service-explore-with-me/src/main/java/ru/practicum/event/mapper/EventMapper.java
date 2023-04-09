@@ -22,7 +22,7 @@ public class EventMapper {
     private final CategoryMapper categoryMapper;
     private final UserMapper userMapper;
 
-    public Event toModel(NewEventDto dto, Category category, User initiator){
+    public Event toModel(NewEventDto dto, Category category, User initiator) {
         return Event.builder()
                 .annotation(dto.getAnnotation())
                 .category(category)

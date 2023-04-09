@@ -16,7 +16,7 @@ public class AdminCategoryController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public CategoryDto create (@RequestBody @Validated NewCategoryDto newCategoryDto){
+    public CategoryDto create(@RequestBody @Validated NewCategoryDto newCategoryDto) {
         return service.create(newCategoryDto);
     }
 
@@ -27,7 +27,7 @@ public class AdminCategoryController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "/{catId}")
-    public void delete (@PathVariable long catId){
+    public void delete(@PathVariable long catId) {
         service.delete(catId);
     }
 

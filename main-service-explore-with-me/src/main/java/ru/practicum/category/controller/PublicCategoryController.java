@@ -26,7 +26,7 @@ public class PublicCategoryController {
 
     @GetMapping
     public List<CategoryDto> getAll(@RequestParam(defaultValue = DEFAULT_FROM_VALUE) @Min(0) int from,
-                                    @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @Min(1) @Max(30) int size){
+                                    @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @Min(1) @Max(30) int size) {
         return service.getAll(PageRequest.of(from / size, size));
     }
 

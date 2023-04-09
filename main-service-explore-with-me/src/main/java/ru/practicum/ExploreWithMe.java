@@ -10,6 +10,7 @@ public class ExploreWithMe {
     public static void main(String[] args) {
         SpringApplication.run(ExploreWithMe.class, args);
     }
+
     @Bean
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
