@@ -2,6 +2,7 @@ package ru.practicum.ewm.hit.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.EndpointsHitDto;
@@ -17,6 +18,7 @@ import java.util.List;
 public class EndpointsHitController {
     private final EndpointsHitService service;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/hit")
     public EndpointsHitDto save(@Validated @RequestBody EndpointsHitDto hit) {
         return service.save(hit);

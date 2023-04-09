@@ -40,7 +40,8 @@ public class PublicEventController {
                                            @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                            @RequestParam(required = false) String sort,
                                            @RequestParam(defaultValue = DEFAULT_FROM_VALUE) @Min(0) int from,
-                                           @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @Min(1) @Max(30) int size) {
+                                           @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @Min(1) @Max(30) int size,
+                                           HttpServletRequest request) {
 
         EnterParams params = EnterParams.builder()
                 .text(text)
@@ -53,6 +54,6 @@ public class PublicEventController {
                 .build();
         Sort sorting = EventSort.from(sort);
 
-        return service.getByParam(params, PageRequest.of(from / size, size, sorting));
+        return service.getByParam(params, PageRequest.of(from / size, size, sorting), request);
     }
 }

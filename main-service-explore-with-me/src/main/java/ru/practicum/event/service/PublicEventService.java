@@ -38,20 +38,25 @@ public class PublicEventService {
 
     public EventFullDto get(long id, HttpServletRequest request) {
         Event event = storage.findByIdAndStateEquals(id, EventState.PUBLISHED).orElseThrow(EventNotFoundException::new);
-        saveStatistic(id, request);
-        event.setViews(getViews(event.getCreatedOn(), event.getEventDate(), List.of(event.getId().toString())).stream().findFirst().orElseThrow().getHits());
+        saveStatistic(request);
+        event.setViews(getViews(event.getCreatedOn(), event.getEventDate(), List.of(request.getRequestURI())).stream().findFirst().orElseThrow().getHits());
         return mapper.toFullDto(event);
     }
 
-    public List<EventShortDto> getByParam(EnterParams params, PageRequest pageRequest) {
+    public List<EventShortDto> getByParam(EnterParams params, PageRequest pageRequest, HttpServletRequest request) {
+        saveStatistic(request);
         Specification<Event> spec = customRepository.createSpecification(params);
-        spec = spec.and(customRepository.createSpecificationAnnotation(params));
-        spec = spec.or(customRepository.createSpecificationDescription(params));
+        if (null != params.getText()) {
+            spec = spec.and(customRepository.createSpecificationAnnotation(params));
+            spec = spec.or(customRepository.createSpecificationDescription(params));
+        }
         List<Event> events = storage.findAll(spec, pageRequest).getContent();
         List<String> uris = events.stream().map(e -> e.getId().toString()).collect(Collectors.toList());
         if (null == params.getRangeStart())
             params.setRangeStart(events.stream().min(Comparator.comparing(Event::getCreatedOn)).orElseThrow().getCreatedOn());
-        if (null == params.getRangeEnd()) params.setRangeEnd(LocalDateTime.now());
+        if (null == params.getRangeEnd())
+            params.setRangeEnd(LocalDateTime.now());
+
         Map<String, Long> views = getViews(params.getRangeStart(), params.getRangeEnd(), uris)
                 .stream().collect(Collectors.toMap(StatsResponseDto::getUri, StatsResponseDto::getHits));
         events.forEach(e -> e.setViews(views.get(e.getId().toString())));
@@ -63,10 +68,10 @@ public class PublicEventService {
 
     }
 
-    private void saveStatistic(Long id, HttpServletRequest request) {
+    private void saveStatistic(HttpServletRequest request) {
         EndpointsHitDto hit = EndpointsHitDto.builder()
                 .app("ewm-main-service")
-                .uri(id.toString())
+                .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now())
                 .build();
