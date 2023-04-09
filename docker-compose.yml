@@ -24,7 +24,7 @@ services:
       - POSTGRES_PASSWORD=root
 
   ewm-service:
-    build: /main-service-explore-with-me
+    build: ./main-service-explore-with-me
     image: main-service-explore-with-me
     container_name: MainService_ewm
     ports:
