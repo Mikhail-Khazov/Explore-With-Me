@@ -1,4 +1,4 @@
-package ru.practicum.event.model;
+package ru.practicum.location.model;
 
 import lombok.*;
 
@@ -12,6 +12,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name = "locations")
 public class Location {
+    //    @EmbeddedId
+//    private LocationId id; TODO
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -9,7 +9,7 @@ import ru.practicum.common.enums.EventState;
 import ru.practicum.common.exception.EventNotFoundException;
 import ru.practicum.common.exception.EventUpdateException;
 import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.UpdateEventDto;
+import ru.practicum.event.dto.UpdateEventAdminRequest;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.EnterParams;
 import ru.practicum.event.model.Event;
@@ -34,7 +34,7 @@ public class AdminEventService {
     }
 
     @Transactional
-    public EventFullDto update(long eventId, UpdateEventDto dto) {
+    public EventFullDto update(long eventId, UpdateEventAdminRequest dto) {
         if (null != dto.getEventDate() && dto.getEventDate().isBefore(LocalDateTime.now().plusHours(1)))
             throw new EventUpdateException("Event can be edited no later than an hour before the start");
         Event event = storage.findById(eventId).orElseThrow(EventNotFoundException::new);

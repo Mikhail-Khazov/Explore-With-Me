@@ -22,16 +22,22 @@ public class AdminCategoryService {
     private final EventStorage eventStorage;
 
     public CategoryDto create(NewCategoryDto newCategoryDto) {
-        if (storage.existsByName(newCategoryDto.getName()))
+        try {
+            Category category = mapper.toModel(newCategoryDto);
+            return mapper.toDto(storage.save(category));
+        } catch (Exception e) {
             throw new EntityAlreadyExistException("Category with that name already exist");
-        Category category = mapper.toModel(newCategoryDto);
-        return mapper.toDto(storage.save(category));
+        }
     }
 
     public CategoryDto update(long catId, NewCategoryDto categoryDto) {
         Category category = storage.findById(catId).orElseThrow(CategoryNotFoundException::new);
-        if (storage.existsByName(categoryDto.getName()))
+        if (category.getName().equals(categoryDto.getName())) {
+            return mapper.toDto(category);
+        }
+        if (storage.existsByName(categoryDto.getName())) {
             throw new EntityAlreadyExistException("Category with that name already exist");
+        }
         category.setName(categoryDto.getName());
         return mapper.toDto(category);
     }

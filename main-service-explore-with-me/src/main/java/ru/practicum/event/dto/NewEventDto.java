@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.event.model.Location;
+import ru.practicum.location.dto.LocationDto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -30,11 +32,13 @@ public class NewEventDto {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
-    @NotNull(message = "Required field")
-    private Location location;
-    private Boolean paid;
-    private Integer participantLimit;
-    private Boolean requestModeration;
+    @Valid
+    @NotNull(message = "Location is required field")
+    private LocationDto location;
+    private boolean paid;
+    @PositiveOrZero
+    private int participantLimit;
+    private boolean requestModeration = true;
     @NotBlank(message = "Title field must not be blank")
     @Size(max = TITLE_MAX_LENGTH, min = TITLE_MIN_LENGTH, message = "Not less than 3 and not more than 120")
     private String title;

@@ -1,18 +1,16 @@
 package ru.practicum.event.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import ru.practicum.category.model.Category;
 import ru.practicum.common.enums.EventState;
-import ru.practicum.request.model.Request;
+import ru.practicum.location.model.Location;
 import ru.practicum.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static ru.practicum.common.Utils.*;
 
@@ -29,22 +27,19 @@ public class Event {
     private Long id;
     @Column(length = ANNOTATION_MAX_LENGTH)
     private String annotation;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
-    @OneToMany(mappedBy = "event")
-    @JsonManagedReference
-    private List<Request> confirmedRequests;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DT_PATTERN)
     private LocalDateTime createdOn;
     @Column(length = DESCRIPTION_MAX_LENGTH)
     private String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DT_PATTERN)
     private LocalDateTime eventDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "initiator_id")
     private User initiator;
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id")
     @Cascade({CascadeType.REMOVE, CascadeType.PERSIST})
     private Location location;

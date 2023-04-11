@@ -17,6 +17,8 @@ import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.storage.CustomEventRepository;
 import ru.practicum.event.storage.EventStorage;
+import ru.practicum.location.model.Location;
+import ru.practicum.location.service.LocationService;
 import ru.practicum.request.dto.ParticipationRequestDto;
 import ru.practicum.request.mapper.RequestMapper;
 import ru.practicum.request.model.Request;
@@ -41,6 +43,7 @@ public class PrivateEventService {
     private final CustomEventRepository customEventRepository;
     private final RequestStorage requestStorage;
     private final RequestMapper requestMapper;
+    private final LocationService locationService;
 
     @Transactional(readOnly = true)
     public List<EventFullDto> getByUserId(Long userId, PageRequest pageRequest) {
@@ -53,7 +56,8 @@ public class PrivateEventService {
 
         User user = userService.getById(userId);
         Category category = categoryService.getById(newEventDto.getCategory());
-        Event event = mapper.toModel(newEventDto, category, user);
+        Location location = locationService.get(newEventDto.getLocation());
+        Event event = mapper.toModel(newEventDto, category, user, location);
 
         return mapper.toFullDto(storage.save(event));
     }
@@ -66,11 +70,13 @@ public class PrivateEventService {
     }
 
 
-    public EventFullDto update(Long userId, Long eventId, UpdateEventDto dto) {
+    public EventFullDto update(Long userId, Long eventId, UpdateEventPrivateRequest dto) {
         checkStartTime(dto.getEventDate());
         userService.getById(userId);
         Event event = getByEventAndUserIds(eventId, userId);
-        if (event.getState().equals(EventState.PUBLISHED)) throw new EventUpdateException("Event already published");
+        if (event.getState().equals(EventState.PUBLISHED)) {
+            throw new EventUpdateException("Event already published");
+        }
 
         customEventRepository.updateEventFields(event, dto);
 
@@ -102,7 +108,7 @@ public class PrivateEventService {
         if (!event.getRequestModeration() || event.getParticipantLimit() == 0 ||
                 updateStatus.getRequestIds().isEmpty())
             return new EventRequestStatusUpdateResult(Collections.emptyList(), Collections.emptyList());
-        if (event.getParticipantLimit() <= event.getConfirmedRequests().size() && event.getParticipantLimit() != 0)
+        if (event.getParticipantLimit() <= requestStorage.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED) && event.getParticipantLimit() != 0)
             throw new RequestException("Participants limit reached");
 
         List<Request> requests = requestStorage.findAllByIdIn(updateStatus.getRequestIds());
@@ -140,4 +146,6 @@ public class PrivateEventService {
     private Event getByEventAndUserIds(Long eventId, Long userId) {
         return storage.findByIdAndInitiatorId(eventId, userId).orElseThrow(EventNotFoundException::new);
     }
+
+
 }

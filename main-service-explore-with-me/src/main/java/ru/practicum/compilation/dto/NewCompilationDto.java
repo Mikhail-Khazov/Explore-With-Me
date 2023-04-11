@@ -18,7 +18,7 @@ import static ru.practicum.common.Utils.TITLE_MIN_LENGTH;
 @NoArgsConstructor
 public class NewCompilationDto {
     private List<Long> events;
-    private Boolean pinned;
+    private boolean pinned;
     @NotBlank(message = "Enter a compilation title")
     @Size(min = TITLE_MIN_LENGTH, max = TITLE_MAX_LENGTH, message = "Category title length between 3 and 120")
     private String title;

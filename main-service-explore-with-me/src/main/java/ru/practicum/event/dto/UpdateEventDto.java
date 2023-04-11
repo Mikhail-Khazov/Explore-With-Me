@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.common.enums.EventStateAction;
-import ru.practicum.event.model.Location;
+import ru.practicum.location.dto.LocationDto;
 
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -25,11 +25,11 @@ public class UpdateEventDto {
     private String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DT_PATTERN)
     private LocalDateTime eventDate;
-    private Location location;
+    private LocationDto location;
     private Boolean paid;
+    @PositiveOrZero
     private Integer participantLimit;
     private Boolean requestModeration;
-    private EventStateAction stateAction;
     @Size(max = TITLE_MAX_LENGTH, min = TITLE_MIN_LENGTH, message = "Not less than 3 and not more than 120")
     private String title;
 }

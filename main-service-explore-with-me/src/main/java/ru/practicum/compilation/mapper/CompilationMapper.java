@@ -19,7 +19,7 @@ public class CompilationMapper {
     public Compilation toModel(NewCompilationDto dto, List<Event> events) {
         return Compilation.builder()
                 .events(events)
-                .pinned(dto.getPinned())
+                .pinned(dto.isPinned())
                 .title(dto.getTitle())
                 .build();
     }

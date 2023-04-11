@@ -26,11 +26,11 @@ public class Request {
     private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DT_PATTERN)
     private LocalDateTime created;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Event event;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "requester_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;

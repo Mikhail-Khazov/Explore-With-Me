@@ -23,22 +23,31 @@ public class AdminUserService {
     private final UserStorage storage;
 
     public UserDto create(NewUserDto newUserDto) {
-        if (storage.findByName(newUserDto.getName()).isPresent()) throw new UserConflictException("Name already taken");
-        User user = mapper.toModel(newUserDto);
-        return mapper.toDto(storage.save(user));
+        try {
+            User user = mapper.toModel(newUserDto);
+            return mapper.toDto(storage.save(user));
+        } catch (Exception e) {
+            throw new UserConflictException("Username or email already exist");
+        }
     }
 
     @Transactional(readOnly = true)
     public List<UserDto> get(List<Long> ids, PageRequest pageRequest) {
         List<User> users;
-        if (null == ids || ids.isEmpty()) users = storage.findAll(pageRequest).toList();
-        else users = storage.findAllByIds(ids, pageRequest);
+        if (null == ids || ids.isEmpty()) {
+            users = storage.findAll(pageRequest).toList();
+        } else {
+            users = storage.findAllByIds(ids, pageRequest);
+        }
         return users.stream().map(mapper::toDto).collect(Collectors.toList());
     }
 
     public void delete(Long userId) {
-        if (storage.existsById(userId)) storage.deleteById(userId);
-        else throw new UserNotFoundException(String.format("User with Id %d does not exist", userId));
+        if (storage.existsById(userId)) {
+            storage.deleteById(userId);
+        } else {
+            throw new UserNotFoundException(String.format("User with Id %d does not exist", userId));
+        }
     }
 
     public User getById(Long userId) {

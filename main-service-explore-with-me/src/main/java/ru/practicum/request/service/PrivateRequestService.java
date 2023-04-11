@@ -19,7 +19,6 @@ import ru.practicum.user.service.AdminUserService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,14 +31,15 @@ public class PrivateRequestService {
     private final AdminUserService userService;
 
     public ParticipationRequestDto create(Long userId, Long eventId) {
-        Optional<Request> existingRequest = storage.findByUserIdAndEventId(userId, eventId);
+        storage.findByUserIdAndEventId(userId, eventId).ifPresent((r) -> {
+            throw new RequestException("Request already exist");
+        });
         Event event = eventService.getById(eventId);
         User user = userService.getById(userId);
 
-        if (existingRequest.isPresent()) throw new RequestException("Request already exist");
         if (event.getInitiator().getId().equals(userId)) throw new RequestException("Request to own event");
         if (!event.getState().equals(EventState.PUBLISHED)) throw new RequestException("Event not published");
-        if (event.getParticipantLimit() <= event.getConfirmedRequests().size() && event.getParticipantLimit() != 0)
+        if (event.getParticipantLimit() <= storage.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED) && event.getParticipantLimit() != 0)
             throw new RequestException("Participants limit reached");
 
         Request request = Request.builder()

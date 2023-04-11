@@ -9,13 +9,14 @@ import ru.practicum.user.dto.NewUserDto;
 import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.service.AdminUserService;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/admin/users")
 @RequiredArgsConstructor
+@Validated
 public class AdminUserController {
     private final AdminUserService service;
 
@@ -28,7 +29,7 @@ public class AdminUserController {
     @GetMapping
     public List<UserDto> get(@RequestParam(required = false) List<Long> ids,
                              @RequestParam(defaultValue = "0") @Min(0) int from,
-                             @RequestParam(defaultValue = "10") @Min(1) @Max(30) int size) {
+                             @RequestParam(defaultValue = "10") @Positive int size) {
         return service.get(ids, PageRequest.of(from / size, size));
     }
 

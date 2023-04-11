@@ -1,6 +1,7 @@
 package ru.practicum.request.storage;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import ru.practicum.common.enums.RequestStatus;
 import ru.practicum.request.model.Request;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface RequestStorage extends JpaRepository<Request, Long> {
     List<Request> findAllByEventId(Long eventId);
 
     List<Request> findAllByIdIn(List<Long> ids);
+
+    Long countByEventIdAndStatus(Long eventId, RequestStatus status);
 }

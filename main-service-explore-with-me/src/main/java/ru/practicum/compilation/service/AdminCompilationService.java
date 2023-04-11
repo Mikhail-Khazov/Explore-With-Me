@@ -13,6 +13,7 @@ import ru.practicum.compilation.storage.CompilationStorage;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.service.AdminEventService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,9 +26,13 @@ public class AdminCompilationService {
     private final AdminEventService eventService;
 
     public CompilationDto create(NewCompilationDto newCompilationDto) {
-        List<Event> events = eventService.getAllForCompilation(newCompilationDto.getEvents());
-        if (newCompilationDto.getEvents().size() != events.size())
+        List<Event> events = new ArrayList<>();
+        if (newCompilationDto.getEvents() != null && !newCompilationDto.getEvents().isEmpty()) {
+            events = eventService.getAllForCompilation(newCompilationDto.getEvents());
+        }
+        if (newCompilationDto.getEvents().size() != events.size()) {
             throw new CompilationNotFoundException("Incorrect event Id values");
+        }
         Compilation compilation = mapper.toModel(newCompilationDto, events);
         return mapper.toDto(storage.save(compilation));
     }
@@ -41,7 +46,7 @@ public class AdminCompilationService {
             } else compilation.setEvents(Collections.emptyList());
         }
         if (null != updateDto.getPinned()) compilation.setPinned(updateDto.getPinned());
-        if (null != updateDto.getTitle()) compilation.setTitle(updateDto.getTitle());
+        if (null != updateDto.getTitle() && !updateDto.getTitle().isBlank()) compilation.setTitle(updateDto.getTitle());
         return mapper.toDto(compilation);
     }
 

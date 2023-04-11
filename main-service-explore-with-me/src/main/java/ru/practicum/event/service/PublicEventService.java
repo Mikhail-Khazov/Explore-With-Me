@@ -1,6 +1,7 @@
 package ru.practicum.event.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PublicEventService {
+    @Value("${main-service.name}")
+    private String applicationName;
     private final EventStorage storage;
     private final CustomEventRepository customRepository;
     private final StatsClient statsClient;
@@ -52,10 +55,13 @@ public class PublicEventService {
         }
         List<Event> events = storage.findAll(spec, pageRequest).getContent();
         List<String> uris = events.stream().map(e -> e.getId().toString()).collect(Collectors.toList());
-        if (null == params.getRangeStart())
-            params.setRangeStart(events.stream().min(Comparator.comparing(Event::getCreatedOn)).orElseThrow().getCreatedOn());
-        if (null == params.getRangeEnd())
+        if (null == params.getRangeStart()) {
+            params.setRangeStart(events.stream().min(Comparator.comparing(Event::getCreatedOn))
+                    .orElseThrow(() -> new RuntimeException("Need specify parameter RangeStart")).getCreatedOn());
+        }
+        if (null == params.getRangeEnd()) {
             params.setRangeEnd(LocalDateTime.now());
+        }
 
         Map<String, Long> views = getViews(params.getRangeStart(), params.getRangeEnd(), uris)
                 .stream().collect(Collectors.toMap(StatsResponseDto::getUri, StatsResponseDto::getHits));
@@ -70,7 +76,7 @@ public class PublicEventService {
 
     private void saveStatistic(HttpServletRequest request) {
         EndpointsHitDto hit = EndpointsHitDto.builder()
-                .app("ewm-main-service")
+                .app(applicationName)
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now())
