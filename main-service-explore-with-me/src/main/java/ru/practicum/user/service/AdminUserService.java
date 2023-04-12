@@ -51,6 +51,6 @@ public class AdminUserService {
     }
 
     public User getById(Long userId) {
-        return storage.findById(userId).orElseThrow(UserNotFoundException::new);
+        return storage.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format("User with ID %d not found", userId)));
     }
 }

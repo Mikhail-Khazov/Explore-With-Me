@@ -29,6 +29,10 @@ public class AdminEventService {
     private final EventMapper mapper;
     private final CustomEventRepository customRepository;
 
+    public Event getByIdForComment(Long eventId){
+        return storage.findByIdAndStateEquals(eventId, EventState.PUBLISHED).
+                orElseThrow(() -> new EventNotFoundException(String.format("Event with ID %d not found", eventId)));
+    }
     public List<Event> getAllForCompilation(List<Long> events) {
         return storage.findAllById(events);
     }

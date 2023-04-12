@@ -12,8 +12,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name = "locations")
 public class Location {
-    //    @EmbeddedId
-//    private LocationId id; TODO
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -16,7 +16,7 @@ import static ru.practicum.common.Utils.DT_PATTERN;
 @Slf4j
 public class ErrorHandler {
     @ExceptionHandler({UserNotFoundException.class, CompilationNotFoundException.class, CategoryNotFoundException.class,
-            SortParamNotFoundException.class, RequestNotFoundException.class, LocationNotFoundException.class})
+            SortParamNotFoundException.class, RequestNotFoundException.class, LocationNotFoundException.class, NotFoundException.class})
     @ResponseStatus(NOT_FOUND)
     public ApiError handleNotFoundException(final RuntimeException e) {
         log.warn("404 {}", e.getMessage(), e);
