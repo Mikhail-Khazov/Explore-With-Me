@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.common.enums.EventState;
 import ru.practicum.common.exception.EventNotFoundException;
 import ru.practicum.common.exception.EventUpdateException;
+import ru.practicum.common.exception.NotFoundException;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.UpdateEventAdminRequest;
 import ru.practicum.event.mapper.EventMapper;
@@ -31,7 +32,7 @@ public class AdminEventService {
 
     public Event getByIdForComment(Long eventId){
         return storage.findByIdAndStateEquals(eventId, EventState.PUBLISHED).
-                orElseThrow(() -> new EventNotFoundException(String.format("Event with ID %d not found", eventId)));
+                orElseThrow(() -> new NotFoundException(String.format("Event with ID %d not found", eventId)));
     }
     public List<Event> getAllForCompilation(List<Long> events) {
         return storage.findAllById(events);
