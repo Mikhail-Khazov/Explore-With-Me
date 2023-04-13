@@ -130,15 +130,15 @@
 			"response": []
 		},
 		{
-			"name": "Fail create comment when event not published",
+			"name": "Fail create comment when event not published and user not owner",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
 							"\r",
-							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
-							"    pm.response.to.have.status(404);\r",
+							"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
 							"    pm.response.to.be.withBody;\r",
 							"    pm.response.to.be.json;\r",
 							"});\r",
@@ -159,6 +159,8 @@
 							"    try {\r",
 							"        const user = await api.addUser(rnd.getUser());\r",
 							"        pm.collectionVariables.set(\"uid\", user.id)\r",
+							"        const user1 = await api.addUser(rnd.getUser());\r",
+							"        pm.collectionVariables.set(\"uid1\", user1.id)\r",
 							"        const category = await api.addCategory(rnd.getCategory());\r",
 							"        let event = await api.addEvent(user.id, rnd.getEvent(category.id)); \r",
 							"        pm.collectionVariables.set(\"eid\", event.id)\r",
@@ -216,13 +218,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/{{uid}}/comments?eventId={{eid}}",
+					"raw": "{{baseUrl}}/users/{{uid1}}/comments?eventId={{eid}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"users",
-						"{{uid}}",
+						"{{uid1}}",
 						"comments"
 					],
 					"query": [

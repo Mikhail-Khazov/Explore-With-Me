@@ -40,7 +40,8 @@ public class PublicEventService {
 
 
     public EventFullDto get(long id, HttpServletRequest request) {
-        Event event = storage.findByIdAndStateEquals(id, EventState.PUBLISHED).orElseThrow(EventNotFoundException::new);
+        Event event = storage.findById(id).orElseThrow(EventNotFoundException::new);
+        if (!event.getState().equals(EventState.PUBLISHED)) throw new EventNotFoundException();
         saveStatistic(request);
         event.setViews(getViews(event.getCreatedOn(), event.getEventDate(), List.of(request.getRequestURI())).stream().findFirst().orElseThrow().getHits());
         return mapper.toFullDto(event);

@@ -9,7 +9,9 @@ import ru.practicum.comment.dto.NewCommentDto;
 import ru.practicum.comment.mapper.CommentMapper;
 import ru.practicum.comment.model.Comment;
 import ru.practicum.comment.storage.CommentStorage;
+import ru.practicum.common.enums.EventState;
 import ru.practicum.common.exception.NotFoundException;
+import ru.practicum.common.exception.RequestException;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.service.AdminEventService;
 import ru.practicum.user.model.User;
@@ -17,6 +19,7 @@ import ru.practicum.user.service.AdminUserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,12 +34,18 @@ public class PrivateCommentService {
     public CommentDto create(Long authorId, Long eventId, NewCommentDto dto) {
         User author = userService.getById(authorId);
         Event event = eventService.getByIdForComment(eventId);
+        if (!Objects.equals(author.getId(), event.getInitiator().getId()) && !event.getState().equals(EventState.PUBLISHED)) {
+            throw new RequestException("Event not published");
+        }
         Comment comment = mapper.toModel(dto, author, event);
         return mapper.toDto(storage.save(comment));
     }
 
     public CommentDto update(Long authorId, Long commentId, NewCommentDto dto) {
         Comment comment = getUserComment(authorId, commentId);
+        if (comment.getCreatedOn().plusHours(1).isBefore(LocalDateTime.now())) {
+            throw new RequestException("Editing is forbidden");
+        }
         comment.setText(dto.getText());
         comment.setCreatedOn(LocalDateTime.now());
         return mapper.toDto(comment);

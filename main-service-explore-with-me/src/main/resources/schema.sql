@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS comments
     event_id BIGINT NOT NULL,
     text VARCHAR(2000) NOT NULL,
     created_on TIMESTAMP NOT NULL,
+    updated_on TIMESTAMP,
     CONSTRAINT pk_comment PRIMARY KEY (id),
     CONSTRAINT fk_comment_user FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT fk_comment_event FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE

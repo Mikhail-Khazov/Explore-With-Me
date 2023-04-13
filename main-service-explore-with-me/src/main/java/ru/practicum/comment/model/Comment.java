@@ -32,5 +32,7 @@ public class Comment {
     private String text;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DT_PATTERN)
     private LocalDateTime createdOn;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DT_PATTERN)
+    private LocalDateTime updatedOn;
 
 }

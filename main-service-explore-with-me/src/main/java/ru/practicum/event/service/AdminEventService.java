@@ -31,7 +31,7 @@ public class AdminEventService {
     private final CustomEventRepository customRepository;
 
     public Event getByIdForComment(Long eventId) {
-        return storage.findByIdAndStateEquals(eventId, EventState.PUBLISHED)
+        return storage.findById(eventId)
                         .orElseThrow(() -> new NotFoundException(String.format("Event with ID %d not found", eventId)));
     }
 

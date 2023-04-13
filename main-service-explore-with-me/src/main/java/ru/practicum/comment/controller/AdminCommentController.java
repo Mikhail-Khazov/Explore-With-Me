@@ -3,6 +3,7 @@ package ru.practicum.comment.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.comment.service.AdminCommentService;
@@ -17,6 +18,7 @@ import static ru.practicum.common.Utils.DEFAULT_SIZE_VALUE;
 @RestController
 @RequestMapping(path = "/admin/comments")
 @RequiredArgsConstructor
+@Validated
 public class AdminCommentController {
     private final AdminCommentService service;
 

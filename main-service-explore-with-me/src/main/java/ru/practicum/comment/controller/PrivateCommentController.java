@@ -19,6 +19,7 @@ import static ru.practicum.common.Utils.DEFAULT_SIZE_VALUE;
 @RestController
 @RequestMapping(path = "/users/{userId}/comments")
 @RequiredArgsConstructor
+@Validated
 public class PrivateCommentController {
     private final PrivateCommentService service;
 
