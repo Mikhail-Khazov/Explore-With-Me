@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.comment.mapper.CommentMapper;
+import ru.practicum.comment.model.Comment;
 import ru.practicum.comment.storage.CommentStorage;
 import ru.practicum.common.enums.EventState;
 import ru.practicum.common.exception.RequestException;
@@ -37,5 +38,9 @@ public class PublicCommentService {
             throw new RequestException("Event not published");
         }
         return storage.findAllByEventId(eventId, pageRequest).stream().map(mapper::toDto).collect(Collectors.toList());
+    }
+
+    public List<Comment> getCommentsForEvent(List<Long> eventsId) {
+        return storage.findAllByEventIdIn(eventsId);
     }
 }

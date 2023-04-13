@@ -7,6 +7,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.client.StatsClient;
+import ru.practicum.comment.model.Comment;
+import ru.practicum.comment.service.PublicCommentService;
 import ru.practicum.common.enums.EventState;
 import ru.practicum.common.exception.EventNotFoundException;
 import ru.practicum.dto.EndpointsHitDto;
@@ -37,6 +39,7 @@ public class PublicEventService {
     private final CustomEventRepository customRepository;
     private final StatsClient statsClient;
     private final EventMapper mapper;
+    private final PublicCommentService commentService;
 
 
     public EventFullDto get(long id, HttpServletRequest request) {
@@ -67,6 +70,10 @@ public class PublicEventService {
         Map<String, Long> views = getViews(params.getRangeStart(), params.getRangeEnd(), uris)
                 .stream().collect(Collectors.toMap(StatsResponseDto::getUri, StatsResponseDto::getHits));
         events.forEach(e -> e.setViews(views.get(e.getId().toString())));
+        List<Comment> comments = commentService.getCommentsForEvent(events.stream().map(Event::getId).collect(Collectors.toList()));
+        Map<Long, Long> eventCommentCount = comments.stream()
+                .collect(Collectors.groupingBy(comment -> comment.getEvent().getId(), Collectors.counting()));
+        events.forEach(e -> e.setCommentsCount(eventCommentCount.get(e.getId())));
         return events.stream().map(mapper::toShortDto).collect(Collectors.toList());
     }
 

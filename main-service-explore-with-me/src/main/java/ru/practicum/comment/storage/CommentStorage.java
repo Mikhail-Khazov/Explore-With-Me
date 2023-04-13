@@ -14,4 +14,6 @@ public interface CommentStorage extends JpaRepository<Comment, Long>, JpaSpecifi
     List<Comment> findAllByAuthorId(Long authorId, PageRequest pageRequest);
 
     List<Comment> findAllByEventId(Long eventId, PageRequest pageRequest);
+
+    List<Comment> findAllByEventIdIn(List<Long> eventId);
 }

@@ -32,7 +32,7 @@ public class AdminEventService {
 
     public Event getByIdForComment(Long eventId) {
         return storage.findById(eventId)
-                        .orElseThrow(() -> new NotFoundException(String.format("Event with ID %d not found", eventId)));
+                .orElseThrow(() -> new NotFoundException(String.format("Event with ID %d not found", eventId)));
     }
 
     public List<Event> getAllForCompilation(List<Long> events) {
