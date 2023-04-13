@@ -32,7 +32,7 @@ public class AdminCommentController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestParam Long commentId){
+    public void delete(@RequestParam Long commentId) {
         service.delete(commentId);
     }
 }
