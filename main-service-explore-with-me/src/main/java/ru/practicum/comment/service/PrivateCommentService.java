@@ -47,7 +47,7 @@ public class PrivateCommentService {
             throw new RequestException("Editing is forbidden");
         }
         comment.setText(dto.getText());
-        comment.setCreatedOn(LocalDateTime.now());
+        comment.setUpdatedOn(LocalDateTime.now());
         return mapper.toDto(comment);
     }
 

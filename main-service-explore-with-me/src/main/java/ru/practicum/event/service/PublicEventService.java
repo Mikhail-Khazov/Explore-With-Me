@@ -79,7 +79,6 @@ public class PublicEventService {
 
     private List<StatsResponseDto> getViews(LocalDateTime start, LocalDateTime end, List<String> uris) {
         return List.of(Objects.requireNonNull(statsClient.getStatistic(start, end, uris, false).getBody()));
-
     }
 
     private void saveStatistic(HttpServletRequest request) {

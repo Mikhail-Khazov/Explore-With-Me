@@ -29,12 +29,15 @@ public class PublicCommentService {
     private final AdminUserService userService;
 
     public List<CommentDto> getEventComments(Long eventId, Long userId, PageRequest pageRequest) {
-        User user = null;
-        if (null != userId) {
-            user = userService.getById(userId);
-        }
         Event event = eventService.getByIdForComment(eventId);
-        if (null != user && !Objects.equals(user.getId(), event.getInitiator().getId()) && !event.getState().equals(EventState.PUBLISHED)) {
+        if (event.getState().equals(EventState.PUBLISHED)) {
+            return storage.findAllByEventId(eventId, pageRequest).stream().map(mapper::toDto).collect(Collectors.toList());
+        }
+        if (null == userId) {
+            throw new RequestException("Event not published");
+        }
+        User user = userService.getById(userId);
+        if (!Objects.equals(user.getId(), event.getInitiator().getId())) {
             throw new RequestException("Event not published");
         }
         return storage.findAllByEventId(eventId, pageRequest).stream().map(mapper::toDto).collect(Collectors.toList());
